@@ -1,0 +1,34 @@
+---
+- hosts: master
+  become: yes
+  remote_user: root
+  tasks:
+    - name: Install metallb
+      command: /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.9/config/manifests/metallb-native.yaml
+    
+    - name: Copy metallb ip pool yaml
+      copy:
+        src: ip-pool.yaml
+        dest: /tmp/ip-pool.yaml
+        owner: root
+        group: root
+        mode: '0755'
+        
+    - name: Wait for metallb pods to be running
+      command: sleep 120
+    
+    - name: Install metallb ip-pool
+      command: /usr/local/bin/kubectl apply -f /tmp/ip-pool.yaml
+   
+    - name: Create argocd NS
+      command: /usr/local/bin/kubectl create ns argocd
+      
+    - name: Install argocd 
+      command: /usr/local/bin/kubectl -n argocd apply -f https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
+      register: command_output
+
+    - debug:
+        var: command_output.stdout_lines
+
+    - name: Install longhorn
+      command: /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.4.2/deploy/longhorn.yaml
