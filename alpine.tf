@@ -21,7 +21,7 @@ variable "ip_list" {
   default     = ["192.168.2.211/24", "192.168.2.212/24", "192.168.2.213/24"]
 }
 resource "proxmox_virtual_environment_vm" "alpine_vm" {
-  count = 3
+  count = 2
   name        = "k3s-agent-${count.index + 1}"
   description = "Managed by Terraform"
   tags        = ["terraform", "alpine"]

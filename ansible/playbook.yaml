@@ -44,6 +44,11 @@
     - name: Run the master script 
       command: sh /tmp/master.sh
 
+    - name: Fetch the config file
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: k3s
+
 - hosts: agent
   gather_facts: true
   become: yes
@@ -59,7 +64,3 @@
     - name: Run the agent script 
       command: sh /tmp/agent.sh
 
-    - name: Fetch the config file
-      fetch:
-        src: /etc/rancher/k3s/k3s.yaml
-        dest: k3s.yaml
