@@ -3,6 +3,7 @@
   gather_facts: true
   become: yes
   remote_user: root 
+
   tasks:
     - name: install packages
       command: /sbin/apk add unzip curl wget wireguard-tools open-iscsi
@@ -27,3 +28,33 @@
     
     - name: start local.d 
       command: rc-service local start
+
+- hosts: master
+  gather_facts: true
+  become: yes
+  remote_user: root 
+
+  tasks:
+    - name: Copy master scripts to node
+      ansible.builtin.copy:
+        src: master.sh
+        dest: /tmp/master.sh
+        mode: '0755'
+    
+    - name: Run the master script 
+      command: sh /tmp/master.sh
+
+- hosts: agent
+  gather_facts: true
+  become: yes
+  remote_user: root 
+
+  tasks:
+    - name: Copy agent scripts to node
+      ansible.builtin.copy:
+        src: agent.sh
+        dest: /tmp/agent.sh
+        mode: '0755'
+    
+    - name: Run the agent script 
+      command: sh /tmp/agent.sh
