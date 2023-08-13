@@ -9,7 +9,7 @@ terraform {
 
 
 provider "proxmox" {
-  endpoint = "https://192.168.2.99:8006/"
+  endpoint = "https://192.168.2.254:8006/"
   username = "root@pam"
   password = "soeid1"
   insecure = true
@@ -21,12 +21,12 @@ variable "ip_list" {
   default     = ["192.168.2.211/24", "192.168.2.212/24", "192.168.2.213/24"]
 }
 resource "proxmox_virtual_environment_vm" "alpine_vm" {
-  count = 2
+  count = 3
   name        = "k3s-agent-${count.index + 1}"
   description = "Managed by Terraform"
   tags        = ["terraform", "alpine"]
   
-  node_name = "homelab"
+  node_name = "tower"
   vm_id     = "432${count.index + 1}"
 
   agent {
@@ -45,7 +45,7 @@ resource "proxmox_virtual_environment_vm" "alpine_vm" {
   }
 
   clone {
-    datastore_id = "pve-ssd"
+    datastore_id = "local-zfs"
     vm_id = 8888
   }
   
@@ -56,7 +56,7 @@ resource "proxmox_virtual_environment_vm" "alpine_vm" {
   serial_device {}
 
   initialization {
-    datastore_id = "pve-ssd"
+    datastore_id = "local-zfs"
     ip_config {
       ipv4 {
         address = element(var.ip_list, count.index)
