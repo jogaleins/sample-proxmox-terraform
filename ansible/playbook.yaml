@@ -15,7 +15,7 @@
         
     - name: mount shared root FS 
       command: mount --make-shared /
-     
+
     - name: Create start file make-shared-root.start
       copy:
         dest: /etc/local.d/make-shared-root.start
@@ -27,7 +27,7 @@
 
     - name: Add executable on local startup
       command: chmod +x /etc/local.d/make-shared-root.start 
-    
+
     - name: start local.d 
       command: rc-service local start
 
