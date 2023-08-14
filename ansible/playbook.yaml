@@ -21,10 +21,12 @@
         dest: /etc/local.d/make-shared-root.start
         content: |
           mount --make-shared /
-          mount --make-shared /vagrant_shared
 
     - name: Enable local.d on startup
-      command: rc-update add local default 
+      command: rc-update add local default
+
+    - name: Add executable on local startup
+      command: chmod +x /etc/local.d/make-shared-root.start 
     
     - name: start local.d 
       command: rc-service local start

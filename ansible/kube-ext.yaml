@@ -22,6 +22,8 @@
    
     - name: Create argocd NS
       command: /usr/local/bin/kubectl create ns argocd
+      ignore_errors: True
+
       
     - name: Install argocd 
       command: /usr/local/bin/kubectl -n argocd apply -f https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/install.yaml
