@@ -6,7 +6,7 @@
 
   tasks:
     - name: install packages
-      command: /sbin/apk add unzip curl wget wireguard-tools open-iscsi
+      command: /sbin/apk add unzip curl wget wireguard-tools open-iscsi e2fsprogs-extra
       
     - name: Update repositories and install wget and curl packages
       community.general.apk:
