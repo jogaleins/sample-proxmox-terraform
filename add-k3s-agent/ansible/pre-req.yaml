@@ -1,0 +1,33 @@
+---
+- hosts: agent
+  gather_facts: true
+  become: yes
+  remote_user: root 
+
+  tasks:
+    - name: install packages
+      command: /sbin/apk add unzip curl wget wireguard-tools open-iscsi e2fsprogs-extra
+      
+    - name: Update repositories and install wget and curl packages
+      community.general.apk:
+        name: wget,curl
+        update_cache: true
+        
+    - name: mount shared root FS 
+      command: mount --make-shared /
+
+    - name: Create start file make-shared-root.start
+      copy:
+        dest: /etc/local.d/make-shared-root.start
+        content: |
+          mount --make-shared /
+          mount -o remount /
+
+    - name: Enable local.d on startup
+      command: rc-update add local default
+
+    - name: Add executable on local startup
+      command: chmod +x /etc/local.d/make-shared-root.start 
+
+    - name: start local.d 
+      command: rc-service local start

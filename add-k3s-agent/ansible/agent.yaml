@@ -1,0 +1,15 @@
+- hosts: agent
+  gather_facts: true
+  become: yes
+  remote_user: root 
+
+  tasks:
+    - name: Copy agent scripts to node
+      ansible.builtin.copy:
+        src: agent.sh
+        dest: /tmp/agent.sh
+        mode: '0755'
+    
+    - name: Run the agent script 
+      command: sh /tmp/agent.sh
+
